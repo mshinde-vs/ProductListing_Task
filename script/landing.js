@@ -4,6 +4,7 @@ const CART_URL = `${BASE_URL}/cart`;
 const categoryContainer = document.getElementById("categoryFilters");
 const productContainer= document.getElementById("productContainer");
 const cartCountElement = document.getElementById("cartCount");
+let cartCountElement = document.getElementById("cartCount");
 
 
 async function loadCategories(){
@@ -79,6 +80,19 @@ function renderProducts(products){
 }
 
 
+async function loadProducts(categoryId = "all"){
+    let url = `${BASE_URL}/products`;
+
+    if(categoryId != "all"){
+        url += `?parentCategoryId=${categoryId}`;
+        console.log(url);
+    }
+    const res = await fetch(url);
+    const products = await res.json();
+
+    renderProducts(products);
+}
+
 categoryContainer.addEventListener("click", (e)=>{
     console.log("Listening");
 
@@ -89,15 +103,6 @@ categoryContainer.addEventListener("click", (e)=>{
     console.log(categoryId);
     loadProducts(categoryId);
 });
-
-loadCategories();
-loadProducts();
-
-
-
-// Add To Cart Functionality
-
- 
 categoryContainer.addEventListener("click", (e)=>{
     console.log("Listening");
 
@@ -109,6 +114,13 @@ categoryContainer.addEventListener("click", (e)=>{
     loadProducts(categoryId);
     alert("Category Clicked");
 });
+
+loadCategories();
+loadProducts();
+
+
+
+// Add To Cart Functionality
 
 // Function to get all cart items from server
 async function getCartItems() {
